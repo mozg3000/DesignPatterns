@@ -24,12 +24,12 @@ class ProductRepository
 
         foreach ($this->getDataFromSource(['id' => $ids]) as $item) {
 
-            $nextProduct = clone $blankProduct;
-            $nextProduct->setId($item['id']);
-            $nextProduct->setName($item['name']);
-            $nextProduct->setPrice($item['price']);
+            $currentProduct = clone $blankProduct;
+            $currentProduct->setId($item['id']);
+            $currentProduct->setName($item['name']);
+            $currentProduct->setPrice($item['price']);
 
-            $productList[] = $nextProduct;
+            $productList[] = $currentProduct;
 
         }
 
@@ -47,12 +47,12 @@ class ProductRepository
 
         foreach ($this->getDataFromSource() as $item) {
 
-            $nextProduct = clone $blankProduct;
-            $nextProduct->setId($item['id']);
-            $nextProduct->setName($item['name']);
-            $nextProduct->setPrice($item['price']);
+            $currentProduct = clone $blankProduct;
+            $currentProduct->setId($item['id']);
+            $currentProduct->setName($item['name']);
+            $currentProduct->setPrice($item['price']);
 
-            $productList[] = $nextProduct;
+            $productList[] = $currentProduct;
         }
 
         return $productList;
