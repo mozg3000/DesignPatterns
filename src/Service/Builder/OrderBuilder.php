@@ -16,11 +16,11 @@ use Service\User\Security;
 
 class OrderBuilder implements IOrder
 {
-    private $basket;
-    private $billing;
-    private $discount;
-    private $communication;
-    private $security;
+    private Basket                   $basket;
+    private BillingInterface         $billing;
+    private DiscountInterface        $discount;
+    private CommunicationInterface   $communication;
+    private Security                 $security;
 
     /**
      * @return mixed
@@ -31,9 +31,8 @@ class OrderBuilder implements IOrder
     }
 
     /**
-     * @param Card $billing
+     * @param BillingInterface $billing
      * @return self
-     *
      */
     public function setBilling(BillingInterface $billing): IOrder
     {
@@ -68,7 +67,7 @@ class OrderBuilder implements IOrder
     }
 
     /**
-     * @param Email $email
+     * @param CommunicationInterface $communication
      * @return self
      */
     public function setCommunication(CommunicationInterface $communication): IOrder
