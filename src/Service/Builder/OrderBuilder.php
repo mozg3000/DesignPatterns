@@ -5,7 +5,6 @@ namespace Service\Builder;
 
 
 use Service\Billing\BillingInterface;
-use Service\Billing\Transfer\Card;
 use Service\Communication\CommunicationInterface;
 use Service\Communication\Sender\Email;
 use Service\Discount\DiscountInterface;
@@ -37,6 +36,8 @@ class OrderBuilder implements IOrder
     public function setBilling(BillingInterface $billing): IOrder
     {
         $this->billing = $billing;
+
+        return $this;
     }
 
     /**
@@ -115,5 +116,7 @@ class OrderBuilder implements IOrder
     public function setBasket(Basket $basket): IOrder
     {
         $this->basket = $basket;
+
+        return $this;
     }
 }
