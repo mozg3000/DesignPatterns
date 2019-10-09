@@ -101,7 +101,7 @@ class OrderBuilder implements IOrder
     {
         return (new Order(
             $this->getBasket(),
-            $this->getCard(),
+            $this->getBilling(),
             $this->getDiscount(),
             $this->getCommunication(),
             $this->getSecurity()
