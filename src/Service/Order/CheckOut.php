@@ -4,8 +4,12 @@
 namespace Service\Order;
 
 use Service\Billing\Exception\BillingException;
+use Service\Billing\Transfer\Card;
 use  Service\Builder\IOrder;
 use Service\Communication\Exception\CommunicationException;
+use Service\Communication\Sender\Email;
+use Service\Discount\NullObject;
+use Service\User\Security;
 
 class CheckOut
 {
@@ -17,14 +21,19 @@ class CheckOut
         $this->orderer = $orderer;
     }
 
-    public function process()
+    public function buildOrder(Basket $basket)
+    {
+        $this->orderer->setBilling(new Card());
+        $this->orderer->setDiscount(new NullObject());
+        $this->orderer->setCommunication(new Email());
+        $this->orderer->setSecurity(new Security($basket->getSession()));
+        $this->orderer->setBasket($basket);
+
+        return $this->orderer->build();
+    }
+    public function process(IOrder $order)
     {
         $totalPrice = 0;
-        /**
-         * @var Order $order
-         */
-        $order = $this->orderer->build();
-
         foreach ($order->getBasket()->getProductsInfo() as $product) {
             $totalPrice += $product->getPrice();
         }
@@ -42,5 +51,10 @@ class CheckOut
             $order->getCommunication()->process($user, 'checkout_template');
         } catch (CommunicationException $e) {
         }
+    }
+
+    public function complete(Basket $basket):void
+    {
+        $this->process($this->buildOrder($basket));
     }
 }

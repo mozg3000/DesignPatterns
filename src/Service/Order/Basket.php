@@ -33,6 +33,14 @@ class Basket
     private $session;
 
     /**
+     * @return SessionInterface
+     */
+    public function getSession(): SessionInterface
+    {
+        return $this->session;
+    }
+
+    /**
      * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
@@ -94,14 +102,8 @@ class Basket
      */
     public function checkout(): void
     {
-        $orderer = new OrderBuilder();
-        $orderer->setBilling(new Card());
-        $orderer->setDiscount(new NullObject());
-        $orderer->setCommunication(new Email());
-        $orderer->setSecurity(new Security($this->session));
-        $orderer->setBasket($this);
+        (new CheckOut(new OrderBuilder()))->complete($this);
 
-        (new CheckOut($orderer))->process();
     }
 
     /**
