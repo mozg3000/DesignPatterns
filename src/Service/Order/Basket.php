@@ -10,6 +10,7 @@ use Model\Repository\ProductRepository;
 use Service\Billing\Exception\BillingException;
 use Service\Billing\BillingInterface;
 use Service\Billing\Transfer\Card;
+use Service\Builder\OrderBuilder;
 use Service\Communication\Exception\CommunicationException;
 use Service\Communication\CommunicationInterface;
 use Service\Communication\Sender\Email;
@@ -30,6 +31,14 @@ class Basket
      * @var SessionInterface
      */
     private $session;
+
+    /**
+     * @return SessionInterface
+     */
+    public function getSession(): SessionInterface
+    {
+        return $this->session;
+    }
 
     /**
      * @param SessionInterface $session
@@ -93,50 +102,8 @@ class Basket
      */
     public function checkout(): void
     {
-        // Здесь должна быть некоторая логика выбора способа платежа
-        $billing = new Card();
+        (new CheckOut(new OrderBuilder()))->complete($this);
 
-        // Здесь должна быть некоторая логика получения информации о скидке
-        // пользователя
-        $discount = new NullObject();
-
-        // Здесь должна быть некоторая логика получения способа уведомления
-        // пользователя о покупке
-        $communication = new Email();
-
-        $security = new Security($this->session);
-
-        $this->checkoutProcess($discount, $billing, $security, $communication);
-    }
-
-    /**
-     * Проведение всех этапов заказа
-     * @param DiscountInterface $discount
-     * @param BillingInterface $billing
-     * @param SecurityInterface $security
-     * @param CommunicationInterface $communication
-     * @return void
-     * @throws BillingException
-     * @throws CommunicationException
-     */
-    public function checkoutProcess(
-        DiscountInterface $discount,
-        BillingInterface $billing,
-        SecurityInterface $security,
-        CommunicationInterface $communication
-    ): void {
-        $totalPrice = 0;
-        foreach ($this->getProductsInfo() as $product) {
-            $totalPrice += $product->getPrice();
-        }
-
-        $discount = $discount->getDiscount();
-        $totalPrice = $totalPrice - $totalPrice / 100 * $discount;
-
-        $billing->pay($totalPrice);
-
-        $user = $security->getUser();
-        $communication->process($user, 'checkout_template');
     }
 
     /**
