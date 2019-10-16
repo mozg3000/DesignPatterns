@@ -6,6 +6,7 @@ namespace Service\Product;
 
 interface ComparatorInterface
 {
+    const METHODNAME = 'compare';
     /**
      * @param $a
      * @param $b

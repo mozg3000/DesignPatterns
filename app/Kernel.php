@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+use Framework\RegisterConfigCommand;
+use Framework\RegisterConfigHandler;
 use Framework\Registry;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -39,7 +41,12 @@ class Kernel
      */
     public function handle(Request $request): Response
     {
-        $this->registerConfigs();
+        (new RegisterConfigHandler(
+                                    new RegisterConfigCommand(__DIR__ . DIRECTORY_SEPARATOR . 'config',
+                                                            'parameters.php',
+                                                                    $this->containerBuilder
+                                                            ))
+                                  )->execute();
         $this->registerRoutes();
 
         return $this->process($request);

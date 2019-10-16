@@ -18,4 +18,9 @@ class ProductNameComparator implements ComparatorInterface
     {
         return strcasecmp($a->getName(), $b->getName());
     }
+
+    public function getMethodName(){
+
+        return 'compare';
+    }
 }

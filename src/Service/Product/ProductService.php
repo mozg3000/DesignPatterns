@@ -36,7 +36,7 @@ class ProductService
         // $sortType === 'name'; // Сортировка по имени
         $sortType = $sortType ? : 'price';
 
-        usort($productList, [$this->getComparator($sortType), 'compare']);
+        usort($productList, [$this->getComparator($sortType), ComparatorInterface::METHODNAME]);
 
 
         return $productList;
@@ -50,7 +50,7 @@ class ProductService
     {
         return new ProductRepository();
     }
-    private function getComparator(string $sortType){
+    private function getComparator(string $sortType):ComparatorInterface{
 
         $comparator = null;
 
