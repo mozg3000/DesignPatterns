@@ -34,6 +34,10 @@ class ProductService
         // Применить паттерн Стратегия
         // $sortType === 'price'; // Сортировка по цене
         // $sortType === 'name'; // Сортировка по имени
+        $sortType = $sortType ? : 'price';
+
+        usort($productList, [$this->getComparator($sortType), 'compare']);
+
 
         return $productList;
     }
@@ -45,5 +49,25 @@ class ProductService
     protected function getProductRepository(): ProductRepository
     {
         return new ProductRepository();
+    }
+    private function getComparator(string $sortType){
+
+        $comparator = null;
+
+        switch(strtolower($sortType)){
+
+            case 'price': {
+
+                $comparator = new ProductPriceComparator();
+
+                break;
+            }
+            case 'name': {
+
+                $comparator = new ProductNameComparator();
+                break;
+            }
+        }
+        return $comparator;
     }
 }
