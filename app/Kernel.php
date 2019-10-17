@@ -43,7 +43,7 @@ class Kernel
      */
     public function handle(Request $request): Response
     {
-        //TODO: Это ваш способ
+        //TODO: Cпособ как на занятии (через handler).
 //        (new RegisterConfigHandler(
 //                                    new RegisterConfigCommand(__DIR__ . DIRECTORY_SEPARATOR . 'config',
 //                                                            'parameters.php',
