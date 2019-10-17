@@ -2,8 +2,10 @@
 
 declare(strict_types = 1);
 
+use Framework\CommandInterface;
 use Framework\RegisterConfigCommand;
 use Framework\RegisterConfigHandler;
+use Framework\RegisterRoutesCommand;
 use Framework\Registry;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,14 +43,33 @@ class Kernel
      */
     public function handle(Request $request): Response
     {
-        (new RegisterConfigHandler(
-                                    new RegisterConfigCommand(__DIR__ . DIRECTORY_SEPARATOR . 'config',
-                                                            'parameters.php',
-                                                                    $this->containerBuilder
-                                                            ))
-                                  )->execute();
-        $this->registerRoutes();
+        //TODO: Это ваш способ
+//        (new RegisterConfigHandler(
+//                                    new RegisterConfigCommand(__DIR__ . DIRECTORY_SEPARATOR . 'config',
+//                                                            'parameters.php',
+//                                                                    $this->containerBuilder
+//                                                            ))
+//                                  )->execute();
+//        $this->registerRoutes();
+        //TODO: Это мой способ
 
+        /**
+         * @var CommandInterface [] $todo
+         */
+        $todo = [
+            new RegisterConfigCommand(__DIR__ . DIRECTORY_SEPARATOR . 'config',
+                                     'parameters.php',
+                                           $this->containerBuilder
+                                    ),
+            new RegisterRoutesCommand(
+                __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routing.php',
+                        $this->containerBuilder
+            )
+        ];
+        foreach ($todo as $task){
+
+            $task->execute();
+        }
         return $this->process($request);
     }
 

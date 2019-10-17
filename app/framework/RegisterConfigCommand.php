@@ -4,7 +4,7 @@
 namespace Framework;
 
 
-class RegisterConfigCommand
+class RegisterConfigCommand implements CommandInterface
 {
     private $fileLocator;
     private $fileLoader;
@@ -31,5 +31,10 @@ class RegisterConfigCommand
     public function getFilename(): string
     {
         return $this->filename;
+    }
+
+    public function execute(): void
+    {
+        $this->getFileLoader()->load($this->getFilename());
     }
 }
