@@ -2,6 +2,11 @@
 
 declare(strict_types = 1);
 
+use Framework\CommandInterface;
+use Framework\CommandsHandler;
+use Framework\RegisterConfigCommand;
+use Framework\RegisterConfigHandler;
+use Framework\RegisterRoutesCommand;
 use Framework\Registry;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -39,8 +44,28 @@ class Kernel
      */
     public function handle(Request $request): Response
     {
-        $this->registerConfigs();
-        $this->registerRoutes();
+        //TODO: Cпособ как на занятии (через handler).
+//        (new RegisterConfigHandler(
+//                                    new RegisterConfigCommand(__DIR__ . DIRECTORY_SEPARATOR . 'config',
+//                                                            'parameters.php',
+//                                                                    $this->containerBuilder
+//                                                            ))
+//                                  )->execute();
+//        $this->registerRoutes();
+        //TODO: Это мой способ
+        //TODO: Здесь не учитывается порядок (точнее есть порядок массива).
+        //TODO: но можно сделать, чтобы и учитывался.
+
+        (new CommandsHandler([
+            new RegisterConfigCommand(__DIR__ . DIRECTORY_SEPARATOR . 'config',
+                'parameters.php',
+                $this->containerBuilder
+            ),
+            new RegisterRoutesCommand(
+                __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routing.php',
+                $this->containerBuilder
+            )
+        ]))->execute();
 
         return $this->process($request);
     }
